@@ -48,9 +48,6 @@ public class ClientGUI extends JFrame{
 
         CreatGui(); // creates gui
 
-        try{
-            my_socket.close();
-        }catch (IOException IOException){}
     }
 
 
@@ -162,6 +159,7 @@ public class ClientGUI extends JFrame{
                     else {
 
                         setVisible(false);
+                        System.out.println(me);
                     }
 
                 } catch (ClassNotFoundException ClassNotFoundException) {

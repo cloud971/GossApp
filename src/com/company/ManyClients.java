@@ -2,7 +2,6 @@ package com.company;
 
 import java.io.*;
 import java.net.*;
-import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -37,6 +36,7 @@ public class ManyClients extends Thread {
     public void run(){
 
         boolean run_me = true;
+
         try {
 
             try {
@@ -45,28 +45,32 @@ public class ManyClients extends Thread {
             while(run_me) {  // loop until user enters correct info
 
                 String[] the_name = (String[]) my_in.readObject(); // reading user info
+                System.out.println(the_name[0]);
+                run_me = false;
 
+                // the user tried to login
                 if (the_name[0].equals("log")){
 
+                    // there is no username match or wrong password
                     if (my_users.get(the_name[1]) == null || !my_users.get(the_name[1]).equals(the_name[2])) {
-                        my_out.writeObject("create now");
+                        my_out.writeObject("mo match case 1");
                     }
 
+                    // username and password match
                     else if (my_users.get(the_name[1]).equals(the_name[2])) { // match found
                         my_out.writeObject("Log Found");
 
-                        // call chat gui
+                        System.out.println("match found");
+
                     }
 
-                    else { // no match
-
-                        my_out.writeObject("create now");
-                    }
                 }
 
-                else{
+                // user is creating an account
+                else if(the_name[0].equals("create")){
 
-                    if (my_users.get(the_name[1]) == null){
+                    // check if username exist and if password is null
+                    if (my_users.get(the_name[1]) == null && the_name[2] !=null){
 
                         String info = "\n"+the_name[1] + "," + the_name[2];
 
@@ -79,8 +83,8 @@ public class ManyClients extends Thread {
                         my_out.writeObject("sucess");
                         my_users.put(the_name[1],the_name[2]);
                     }
-
                 }
+
             }
 
             }catch (ClassNotFoundException ClassNotFoundException){
