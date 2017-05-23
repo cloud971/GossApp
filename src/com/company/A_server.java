@@ -100,6 +100,7 @@ public class A_server {
                 name = user_info[0];
                 pass = user_info[1];
 
+                // adding to tree
                 my_users.put(name,pass);
             }
 /*
@@ -113,7 +114,7 @@ public class A_server {
             read.close(); // close the file
         }
 
-        // file cannot be open
+        // file cannot be open yes
         catch (IOException e) {
             System.out.println("failed no file");
         }
