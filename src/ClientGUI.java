@@ -158,8 +158,11 @@ public class ClientGUI extends JFrame{
 
                         my_error.setVisible(true);
                     }
-                    else
+
+                    else {
+
                         setVisible(false);
+                    }
 
                 } catch (ClassNotFoundException ClassNotFoundException) {
 
