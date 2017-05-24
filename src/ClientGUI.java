@@ -26,7 +26,11 @@ public class ClientGUI extends JFrame{
     private JFrame my_error;
     private JLabel errormsg = new JLabel("Error Try Again");
     private JButton cancel_me = new JButton("OK");
-    private String [] the_user = new String[3];
+    private String option;
+    private String usr_name;
+    private char [] ident;
+    private String pass;
+    private String passme;
     private Socket my_socket;
 
     // constructor
@@ -41,6 +45,7 @@ public class ClientGUI extends JFrame{
             this.read_me = new ObjectInputStream(my_socket.getInputStream());
 
             System.out.print("connected!!!");
+
 
         }catch (IOException e){
             System.out.println("cant connect");
@@ -89,8 +94,9 @@ public class ClientGUI extends JFrame{
                 char [] my_password = passText.getPassword();
                 String my_stringword = new String(my_password);
                 */
-                the_user[0] ="log";
-                whileLog(the_user);
+                option ="log";
+                System.out.println("log pressed");
+                whileLog(option);
             }
         });
 
@@ -103,8 +109,8 @@ public class ClientGUI extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                the_user[0] = "create";
-                whileLog(the_user);
+                option= "create";
+                whileLog(option);
             }
         });
 
@@ -135,16 +141,19 @@ public class ClientGUI extends JFrame{
 
     }
 
-    public void whileLog(String [] info) {
+    public void whileLog(String info) {
 
         char[] my_password;
-        info[1] = textUsername.getText();
         my_password = passText.getPassword();
-        info[2] = new String(my_password);
+        usr_name = textUsername.getText();
+        pass = new String(my_password);
+        passme = info+","+usr_name+","+pass;
+
+        System.out.println(passme);
 
         try {
 
-            display_me.writeObject(info);
+            display_me.writeObject(passme);
 
                 try {
 
@@ -159,7 +168,8 @@ public class ClientGUI extends JFrame{
                     else {
 
                         setVisible(false);
-                        System.out.println(me);
+                        GUI talking = new GUI(read_me,display_me,usr_name);
+                        talking.create();
                     }
 
                 } catch (ClassNotFoundException ClassNotFoundException) {

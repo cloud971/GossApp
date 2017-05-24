@@ -41,8 +41,11 @@ public class A_server {
         } catch (IOException exception) {
             System.out.print("Exit");
         }
+
         try{
-        a_socket.close();
+
+            System.out.println("closing");
+            a_socket.close();
 
         }catch (IOException IOException){}
 

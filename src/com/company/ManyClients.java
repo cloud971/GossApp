@@ -11,6 +11,7 @@ public class ManyClients extends Thread {
     private ObjectOutputStream my_out;
     private Socket user_s;
     private TreeMap<String, String> my_users;
+    private String [] the_name;
 
     public ManyClients(Socket client_s, TreeMap<String, String> my_users) {
 
@@ -44,23 +45,23 @@ public class ManyClients extends Thread {
 
             while(run_me) {  // loop until user enters correct info
 
-                String[] the_name = (String[]) my_in.readObject(); // reading user info
-                System.out.println(the_name[0]);
-                run_me = false;
+                String the_n = (String) my_in.readObject(); // reading user info
+                the_name = the_n.split(",");
+                System.out.println(the_name[1]+the_name[2]);
 
                 // the user tried to login
                 if (the_name[0].equals("log")){
 
                     // there is no username match or wrong password
                     if (my_users.get(the_name[1]) == null || !my_users.get(the_name[1]).equals(the_name[2])) {
-                        my_out.writeObject("mo match case 1");
+                        my_out.writeObject("create now");
                     }
 
                     // username and password match
                     else if (my_users.get(the_name[1]).equals(the_name[2])) { // match found
                         my_out.writeObject("Log Found");
-
-                        System.out.println("match found");
+                        System.out.println(" found something");
+                        run_me = false;
 
                     }
 
@@ -78,11 +79,13 @@ public class ManyClients extends Thread {
                         out.write(info);
                         out.close();
 
-                        run_me = false;
-
-                        my_out.writeObject("sucess");
+                        run_me = false; // stop loop
                         my_users.put(the_name[1],the_name[2]);
+                        my_out.writeObject("Success");
                     }
+
+                    else
+                        my_out.writeObject("create now");
                 }
 
             }
