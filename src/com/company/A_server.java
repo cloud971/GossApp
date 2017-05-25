@@ -1,7 +1,7 @@
 package com.company;
 import java.net.*;
 import java.io.*;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class A_server {
@@ -12,6 +12,7 @@ public class A_server {
     private ServerSocket server_a;
     private ManyClients someclient;
     private TreeMap<String,String> my_users;
+    private ArrayList<ManyClients> user_list;
 
     // setting up server
     public void call_server() {
@@ -22,6 +23,7 @@ public class A_server {
 
             server_a = new ServerSocket(444);   // creates a socket at the portnumber
 
+            user_list = new ArrayList<>();
             // loops waiting for connection
             while (true) {
 
@@ -30,9 +32,15 @@ public class A_server {
                     a_socket = server_a.accept(); // get port connected
 
                     // client thread
-                    someclient = new ManyClients(a_socket,my_users);
+                    someclient = new ManyClients(a_socket,my_users,user_list);
+                    user_list.add(someclient);
                     someclient.start();
 
+                   /* // new code
+                    for (int i=0; i < user_list.size(); ++i){
+                        user_list.get(i).sending(someclient.getname());
+                    }
+                   */
                 } catch (EOFException eofException) {
                     System.out.print("ended");
                 }

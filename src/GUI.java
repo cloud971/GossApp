@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import javax.swing.border.*;
@@ -67,9 +68,18 @@ public class GUI extends JFrame{
 
     public void gosspip(){
 
-        String message = my_text.getText();
-        my_area.append(name+": "+message+"\n");
+        String message = name+": "+ my_text.getText()+"\n";
 
+        try{
+            displayme.writeObject(message);
+        }catch (IOException IOException){
+
+        }
     }
 
+
+    public void sendme(String mee){
+
+        my_area.append(mee);
+    }
 }

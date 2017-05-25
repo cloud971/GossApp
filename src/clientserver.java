@@ -6,5 +6,4 @@ public class clientserver{
         ClientGUI my_gui = new ClientGUI();
 
     }
-
 }

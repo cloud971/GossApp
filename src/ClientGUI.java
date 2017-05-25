@@ -170,6 +170,28 @@ public class ClientGUI extends JFrame{
                         setVisible(false);
                         GUI talking = new GUI(read_me,display_me,usr_name);
                         talking.create();
+
+
+                        Thread m = new Thread(){
+                          public void run(){
+                              String me;
+
+                              while (true){
+                                  try
+                                  {
+                                      try {
+                                          me = (String) read_me.readObject();
+                                          System.out.println(me);
+                                          talking.sendme(me);
+                                      }catch (ClassNotFoundException ClassNotfoundException){}
+                                  }catch (IOException IOException){
+
+                                  }
+
+                              }
+                          }
+
+                        }; m.start();
                     }
 
                 } catch (ClassNotFoundException ClassNotFoundException) {
