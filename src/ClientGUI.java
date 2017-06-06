@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
+import java.security.*;
 
 public class ClientGUI extends JFrame{
 
@@ -28,10 +29,12 @@ public class ClientGUI extends JFrame{
     private JButton cancel_me = new JButton("OK");
     private String option;
     private String usr_name;
-    private char [] ident;
     private String pass;
     private String passme;
     private Socket my_socket;
+    public volatile boolean []go = new boolean[1];
+    private String unique;
+    private MessageDigest Alg;
 
     // constructor
     ClientGUI(){
@@ -51,10 +54,7 @@ public class ClientGUI extends JFrame{
             System.out.println("cant connect");
         }
 
-        CreatGui(); // creates gui
-
     }
-
 
     public void CreatGui(){
 
@@ -95,7 +95,6 @@ public class ClientGUI extends JFrame{
                 String my_stringword = new String(my_password);
                 */
                 option ="log";
-                System.out.println("log pressed");
                 whileLog(option);
             }
         });
@@ -138,7 +137,6 @@ public class ClientGUI extends JFrame{
         my_error.pack();
         my_error.setLocationRelativeTo(null);
         my_error.setVisible(false);
-
     }
 
     public void whileLog(String info) {
@@ -149,7 +147,15 @@ public class ClientGUI extends JFrame{
         pass = new String(my_password);
         passme = info+","+usr_name+","+pass;
 
-        System.out.println(passme);
+        try {
+
+            Alg = MessageDigest.getInstance("SHA-256");
+            Alg.update((usr_name + pass).getBytes());
+            unique = new String(Alg.digest());
+
+        }catch (NoSuchAlgorithmException NoSuchAlgorithmException){
+
+        }
 
         try {
 
@@ -167,40 +173,58 @@ public class ClientGUI extends JFrame{
 
                     else {
 
+                        go[0] = true;
                         setVisible(false);
-                        GUI talking = new GUI(read_me,display_me,usr_name);
-                        talking.create();
+                        GUI talking = new GUI(read_me,display_me,usr_name,unique);
+                        talking.create(go);
+                        my_error.dispose();
 
 
                         Thread m = new Thread(){
                           public void run(){
-                              String me;
 
-                              while (true){
+                              String me;
+                              while (go[0]){
+
                                   try
                                   {
+
                                       try {
+
                                           me = (String) read_me.readObject();
-                                          System.out.println(me);
+
+                                          if(me.equals(unique))
+                                              break;
+
                                           talking.sendme(me);
-                                      }catch (ClassNotFoundException ClassNotfoundException){}
+
+                                      }catch (ClassNotFoundException ClassNotfoundException){
+                                      }
                                   }catch (IOException IOException){
-
                                   }
-
                               }
+
+                              talking.close();
+                              talking.dispose();
+
+                              try{
+                                    read_me.close();
+                                    display_me.close();
+                                    my_socket.close();
+
+                              }catch (IOException IOException){}
+
+                              dispose();
+
                           }
 
                         }; m.start();
                     }
 
                 } catch (ClassNotFoundException ClassNotFoundException) {
-
                 }
 
         }catch (IOException IOException){
-
             }
-
     }
 }

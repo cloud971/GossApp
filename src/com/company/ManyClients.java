@@ -2,6 +2,8 @@ package com.company;
 
 import java.io.*;
 import java.net.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
@@ -13,7 +15,9 @@ public class ManyClients extends Thread {
     private TreeMap<String, String> my_users;
     private String [] the_name;
     private ArrayList<ManyClients> user_list;
-
+    private String unique;
+    private MessageDigest Alg;
+    boolean connect = true;
 
     public ManyClients(Socket client_s, TreeMap<String, String> my_users, ArrayList<ManyClients> user_list) {
 
@@ -105,7 +109,7 @@ public class ManyClients extends Thread {
             System.out.println("Run method failed");
         }
 
-        // tell user someone is online
+        // tell user someone is online new code
         for (int i=0; i < user_list.size(); ++i){
             user_list.get(i).sending(the_name[1]+" is online\n");
         }
@@ -116,14 +120,59 @@ public class ManyClients extends Thread {
     public void recieve(){
 
         String reading;
-        while (true){
+        try{
+
+            Alg = MessageDigest.getInstance("SHA-256");
+        }
+        catch (NoSuchAlgorithmException NoSuchAlgorithm){
+
+        }
+
+        Alg.update((the_name[1]+the_name[2]).getBytes());
+        unique = new String(Alg.digest());
+
+        boolean go = true;
+
+        while (go){
             try {
 
                 try {
 
                     reading = (String) my_in.readObject();
-                    for (int i = 0; i < user_list.size();++i ){
-                        user_list.get(i).sending(reading);
+
+                    if(reading.equals(unique)){
+
+                        for (int i = 0; i < user_list.size();++i ){
+
+                            if (!user_list.get(i).getname().equals(the_name[1])){
+                            reading = the_name[1]+" has logged out\n";
+                            user_list.get(i).sending(reading);
+                            }
+
+                            else
+                                user_list.get(i).sending(unique);
+
+                        }
+
+                        try {
+
+                            my_out.close();
+                            my_in.close();
+                            user_s.close();
+
+                        }catch (IOException IOException){
+
+                        }
+
+                        connect = false;
+                        break;
+                    }
+
+                    else {
+
+                        for (int i = 0; i < user_list.size(); ++i) {
+                            user_list.get(i).sending(reading);
+                        }
                     }
 
                 }catch (ClassNotFoundException ClassNotfoundException){}
@@ -141,4 +190,15 @@ public class ManyClients extends Thread {
         }
 
     }
+
+    public String getname(){
+
+        return the_name[1];
+    }
+
+    public boolean connection(){
+
+        return connect;
+    }
+
 }

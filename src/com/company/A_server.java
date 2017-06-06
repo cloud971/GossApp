@@ -36,11 +36,15 @@ public class A_server {
                     user_list.add(someclient);
                     someclient.start();
 
-                   /* // new code
+
                     for (int i=0; i < user_list.size(); ++i){
-                        user_list.get(i).sending(someclient.getname());
+
+                        if(!user_list.get(i).connection())
+                            user_list.remove(i);
                     }
-                   */
+
+                    System.out.println(user_list.size());
+
                 } catch (EOFException eofException) {
                     System.out.print("ended");
                 }
