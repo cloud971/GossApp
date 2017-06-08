@@ -140,9 +140,12 @@ public class ManyClients extends Thread {
 
                     reading = (String) my_in.readObject();
 
+                    // user logging out
                     if(reading.equals(unique)){
 
+                        // tell other users someone is leaving
                         for (int i = 0; i < user_list.size();++i ){
+
 
                             if (!user_list.get(i).getname().equals(the_name[1])){
                             reading = the_name[1]+" has logged out\n";
@@ -165,7 +168,7 @@ public class ManyClients extends Thread {
                         }
 
                         connect = false;
-                        break;
+                        go = false;
                     }
 
                     else {

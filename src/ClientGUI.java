@@ -43,7 +43,7 @@ public class ClientGUI extends JFrame{
 
         try{
 
-            my_socket = new Socket(InetAddress.getByName("127.0.0.1"), 444);
+            my_socket = new Socket("Andriod-16", 444);
             this.display_me = new ObjectOutputStream(my_socket.getOutputStream());
             this.read_me = new ObjectInputStream(my_socket.getInputStream());
 
@@ -194,9 +194,10 @@ public class ClientGUI extends JFrame{
                                           me = (String) read_me.readObject();
 
                                           if(me.equals(unique))
-                                              break;
+                                              go[0] = false;
 
-                                          talking.sendme(me);
+                                          else
+                                            talking.sendme(me);
 
                                       }catch (ClassNotFoundException ClassNotfoundException){
                                       }

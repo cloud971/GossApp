@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.security.MessageDigest;
 import javax.swing.border.*;
 
 public class GUI extends JFrame{
@@ -55,10 +54,10 @@ public class GUI extends JFrame{
 
         GridC.gridx=2;
         GridC.insets = new Insets(-15,-75,10,10);
+        send.setToolTipText("send message to all");
         goss.add(send,GridC);
 
         GridC.gridy = 3;
-
         goss.add(sign_out,GridC);
 
         send.addActionListener(new ActionListener() {
@@ -69,6 +68,7 @@ public class GUI extends JFrame{
             }
         });
 
+        sign_out.setToolTipText("Exit Chat");
         sign_out.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

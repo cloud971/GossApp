@@ -37,13 +37,13 @@ public class A_server {
                     someclient.start();
 
 
+                    // removes connection
                     for (int i=0; i < user_list.size(); ++i){
 
                         if(!user_list.get(i).connection())
                             user_list.remove(i);
                     }
 
-                    System.out.println(user_list.size());
 
                 } catch (EOFException eofException) {
                     System.out.print("ended");
