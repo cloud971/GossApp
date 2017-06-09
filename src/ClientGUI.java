@@ -41,6 +41,7 @@ public class ClientGUI extends JFrame{
 
         super("GossApp"); //title of jframe
 
+
         try{
 
             my_socket = new Socket("Andriod-16", 444);
