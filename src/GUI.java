@@ -105,6 +105,7 @@ public class GUI extends JFrame{
         my_area.append(mee);
     }
 
+    // tell user im leaving
     public void leave(String message){
 
         try{
